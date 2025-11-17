@@ -7,9 +7,6 @@ st.set_page_config(page_title="Excel 合併工具", page_icon="🧩", layout="wi
 
 st.title("🧩 Excel 合併工具")
 
-
-
-
 # 上傳多個 Excel 檔案
 uploaded_files = st.file_uploader("請上傳您的 Excel 檔案（可上傳多個檔案）", type=["xlsx"], accept_multiple_files=True)
 
@@ -99,7 +96,10 @@ if uploaded_files:
                             df.columns = df.columns.str.strip()
                             if selected_column in df.columns:
                                 df[selected_column] = df[selected_column].astype(str).str.strip().fillna("N/A")
+
+                                # 設置索引，並確保索引名稱為 "會計科目"
                                 df.set_index(selected_column, inplace=True)
+                                df.index.name = "會計科目"
                             else:
                                 st.warning(f"檔案 {uploaded_file.name} 的工作表 {selected_sheet} 缺少主欄位 {selected_column}，跳過該工作表。")
                                 continue
@@ -130,6 +130,10 @@ if uploaded_files:
                     else:
                         # 其他型別欄位填補空值為 "N/A"
                         merged_df[column] = merged_df[column].fillna("N/A")
+
+                # **修正：確保索引重置為欄位（橫向合併時適用）**
+                if merge_mode == "橫向合併 (左右拼接)":
+                    merged_df.reset_index(inplace=True)
 
                 # 顯示合併完成的結果
                 st.success("合併完成！")
