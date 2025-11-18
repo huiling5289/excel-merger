@@ -99,7 +99,8 @@ if uploaded_files:
 
                                 # 設置索引，並確保索引名稱為 "會計科目"
                                 df.set_index(selected_column, inplace=True)
-                                df.index.name = "會計科目"
+                                #df.index.name = "會計科目"
+                                df.index.name = selected_column  # 動態設置索引名稱為用戶選擇的合併依據
                             else:
                                 st.warning(f"檔案 {uploaded_file.name} 的工作表 {selected_sheet} 缺少主欄位 {selected_column}，跳過該工作表。")
                                 continue
@@ -159,3 +160,4 @@ if uploaded_files:
 
 else:
     st.info("請上傳至少一個 Excel 檔案以開始。")
+
